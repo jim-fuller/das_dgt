@@ -11,8 +11,8 @@
   DTS:LocaleID="1033"
   DTS:ObjectName="Master_etl_extract"
   DTS:PackageType="5"
-  DTS:VersionBuild="535"
-  DTS:VersionGUID="{DB42479D-8F41-4A0B-AFBE-938CDD5A7420}">
+  DTS:VersionBuild="540"
+  DTS:VersionGUID="{83ACFB50-5769-47F3-B708-1362B88A1C7A}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -111,18 +111,36 @@ group by processid , visn,station__no, SubjectAreaNM, source, errormessage havin
       DTS:CreationName=""
       DTS:DTSID="{465ED9E9-2B14-4723-BC5D-7E64350AB561}"
       DTS:EvaluateAsExpression="True"
-      DTS:Expression="&quot;;  with passroom as (&#xA; select visn, station__no,room_number from &quot; + @[$Project::stgschema] + &quot;.VHACDWA06CdwWorkInventoryequipmentinv6914engspace6928DSSDimDimLocationVha &#xA; where room_number not like 'ZZ%'  and try_convert(float, location) is not null   )&#xA;&#xA;&#xA;select  visn, station__no, count(*) as passcnt,(select  Coalesce(max(processid),0) from  &quot; + @[$Project::dwschema]  + &quot;.FactDGTequipinv6914ErrorDetails)  as processid  from  passroom&#xA;group by visn,station__no  &quot;"
+      DTS:Expression="&quot;;with passroom as (&#xA;&#x9;select&#xA;&#x9;&#x9;visn&#xA;&#x9;&#x9;,station__no&#xA;&#x9;&#x9;,room_number&#xA;&#x9;from &quot; + @[$Project::stgschema] + &quot;.VHACDWA06CdwWorkInventoryequipmentinv6914engspace6928DSSDimDimLocationVha&#xA;&#x9;where room_number not like 'ZZ%'&#xA;&#x9;--and try_convert(float, location) is not null&#xA;)&#xA;&#xA;&#xA;&#xA;&#xA;select&#xA;&#x9;visn&#xA;&#x9;,station__no&#xA;&#x9;,count(*) as passcnt&#xA;&#x9;,(&#xA;&#x9;&#x9;select&#xA;&#x9;&#x9;&#x9;Coalesce(max(processid),0)&#xA;&#x9;&#x9;from &quot; + @[$Project::dwschema]  + &quot;.FactDGTequipinv6914ErrorDetails&#xA;&#x9;) as processid&#xA;from passroom&#xA;&#xA;group by visn, station__no&quot;"
       DTS:IncludeInDebugDump="2345"
       DTS:Namespace="User"
       DTS:ObjectName="dgtpasscnt">
       <DTS:VariableValue
-        DTS:DataType="8">;  with passroom as (
- select visn, station__no,room_number from stg.VHACDWA06CdwWorkInventoryequipmentinv6914engspace6928DSSDimDimLocationVha 
- where room_number not like 'ZZ%'  and try_convert(float, location) is not null   )
+        DTS:DataType="8">;with passroom as (
+	select
+		visn
+		,station__no
+		,room_number
+	from stg.VHACDWA06CdwWorkInventoryequipmentinv6914engspace6928DSSDimDimLocationVha
+	where room_number not like 'ZZ%'
+	--and try_convert(float, location) is not null
+)
 
 
-select  visn, station__no, count(*) as passcnt,(select  Coalesce(max(processid),0) from  dw.FactDGTequipinv6914ErrorDetails)  as processid  from  passroom
-group by visn,station__no  </DTS:VariableValue>
+
+
+select
+	visn
+	,station__no
+	,count(*) as passcnt
+	,(
+		select
+			Coalesce(max(processid),0)
+		from dw.FactDGTequipinv6914ErrorDetails
+	) as processid
+from passroom
+
+group by visn, station__no</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -252,7 +270,7 @@ from dw.[FactDGTRuleSummary] drs
                         <inputColumn
                           refId="Package\SEQC- detail\DFT- load equipinv location details errors\DCV.Inputs[Data Conversion Input].Columns[errormsg]"
                           cachedDataType="wstr"
-                          cachedLength="22"
+                          cachedLength="19"
                           cachedName="errormsg"
                           lineageId="Package\SEQC- detail\DFT- load equipinv location details errors\DER.Outputs[Derived Column Output].Columns[errormsg]" />
                         <inputColumn
@@ -483,7 +501,7 @@ from dw.[FactDGTRuleSummary] drs
                           dataType="wstr"
                           errorOrTruncationOperation="Computation"
                           errorRowDisposition="FailComponent"
-                          length="22"
+                          length="19"
                           lineageId="Package\SEQC- detail\DFT- load equipinv location details errors\DER.Outputs[Derived Column Output].Columns[errormsg]"
                           name="errormsg"
                           truncationRowDisposition="FailComponent">
@@ -492,13 +510,13 @@ from dw.[FactDGTRuleSummary] drs
                               containsID="true"
                               dataType="System.String"
                               description="Derived Column Expression"
-                              name="Expression">"Location Mal Formatted"</property>
+                              name="Expression">"Database Corruption"</property>
                             <property
                               containsID="true"
                               dataType="System.String"
                               description="Derived Column Friendly Expression"
                               expressionType="Notify"
-                              name="FriendlyExpression">"Location Mal Formatted"</property>
+                              name="FriendlyExpression">"Database Corruption"</property>
                           </properties>
                         </outputColumn>
                         <outputColumn
@@ -515,13 +533,13 @@ from dw.[FactDGTRuleSummary] drs
                               containsID="true"
                               dataType="System.String"
                               description="Derived Column Expression"
-                              name="Expression">"CEQUIPBSE"</property>
+                              name="Expression">"AEMS/MERS"</property>
                             <property
                               containsID="true"
                               dataType="System.String"
                               description="Derived Column Friendly Expression"
                               expressionType="Notify"
-                              name="FriendlyExpression">"CEQUIPBSE"</property>
+                              name="FriendlyExpression">"AEMS/MERS"</property>
                           </properties>
                         </outputColumn>
                         <outputColumn
@@ -1680,13 +1698,13 @@ from dw.[FactDGTRuleSummary] drs
                               containsID="true"
                               dataType="System.String"
                               description="Derived Column Expression"
-                              name="Expression">"CEQUIPBSE"</property>
+                              name="Expression">"AEMS/MERS"</property>
                             <property
                               containsID="true"
                               dataType="System.String"
                               description="Derived Column Friendly Expression"
                               expressionType="Notify"
-                              name="FriendlyExpression">"CEQUIPBSE"</property>
+                              name="FriendlyExpression">"AEMS/MERS"</property>
                           </properties>
                         </outputColumn>
                         <outputColumn
@@ -4358,13 +4376,13 @@ from dw.[FactDGTRuleSummary] drs
                               containsID="true"
                               dataType="System.String"
                               description="Derived Column Expression"
-                              name="Expression">"CEQUIPBSE"</property>
+                              name="Expression">"AEMS/MERS"</property>
                             <property
                               containsID="true"
                               dataType="System.String"
                               description="Derived Column Friendly Expression"
                               expressionType="Notify"
-                              name="FriendlyExpression">"CEQUIPBSE"</property>
+                              name="FriendlyExpression">"AEMS/MERS"</property>
                           </properties>
                         </outputColumn>
                         <outputColumn
@@ -4906,14 +4924,14 @@ from dw.[FactDGTRuleSummary] drs
         <NodeLayout
           Size="193,57"
           Id="Package\SEQC- detail\DFT- load equipinv room details errors"
-          TopLeft="50,82" />
+          TopLeft="51,82" />
         <NodeLayout
           Size="167,42"
           Id="Package\SEQC- detail\SQL- get processid"
           TopLeft="57,12.5" />
         <EdgeLayout
           Id="Package\SEQC- detail.PrecedenceConstraints[Constraint]"
-          TopLeft="143.5,139">
+          TopLeft="144,139">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -4935,7 +4953,7 @@ from dw.[FactDGTRuleSummary] drs
         </EdgeLayout>
         <EdgeLayout
           Id="Package\SEQC- detail.PrecedenceConstraints[Constraint 1]"
-          TopLeft="143.5,54.5">
+          TopLeft="144,54.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -4965,7 +4983,7 @@ from dw.[FactDGTRuleSummary] drs
         <NodeLayout
           Size="209,42"
           Id="Package\SEQC- summary\DFT- Error detail summary"
-          TopLeft="59,151" />
+          TopLeft="71,164" />
         <NodeLayout
           Size="180,42"
           Id="Package\SEQC- summary\DFT- Error summary"
@@ -4973,33 +4991,21 @@ from dw.[FactDGTRuleSummary] drs
         <NodeLayout
           Size="186,42"
           Id="Package\SEQC- summary\DFT- PassTotal summary"
-          TopLeft="72,82" />
+          TopLeft="81,85" />
         <EdgeLayout
           Id="Package\SEQC- summary.PrecedenceConstraints[Constraint]"
-          TopLeft="175,55">
+          TopLeft="174.5,55">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="-10,27"
+              EndConnector="0,30"
               Start="0,0"
-              End="-10,19.5">
+              End="0,22.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,9.5" />
-                  <mssgle:CubicBezierSegment
-                    Point1="0,9.5"
-                    Point2="0,13.5"
-                    Point3="-4,13.5" />
-                  <mssgle:LineSegment
-                    End="-6,13.5" />
-                  <mssgle:CubicBezierSegment
-                    Point1="-6,13.5"
-                    Point2="-10,13.5"
-                    Point3="-10,17.5" />
-                  <mssgle:LineSegment
-                    End="-10,19.5" />
+                    End="0,22.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -5010,18 +5016,18 @@ from dw.[FactDGTRuleSummary] drs
         </EdgeLayout>
         <EdgeLayout
           Id="Package\SEQC- summary.PrecedenceConstraints[Constraint 1]"
-          TopLeft="164.25,124">
+          TopLeft="174.75,127">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,27"
+              EndConnector="0,37"
               Start="0,0"
-              End="0,19.5">
+              End="0,29.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,19.5" />
+                    End="0,29.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -5033,28 +5039,28 @@ from dw.[FactDGTRuleSummary] drs
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="365,248"
-          Size="365,291"
+          PanelSize="365,260"
+          Size="365,303"
           Id="Package\SEQC- summary"
-          TopLeft="125,398" />
+          TopLeft="125,406" />
         <NodeLayout
           Size="195,42"
           Id="Package\SQL- update total count"
-          TopLeft="216,722" />
+          TopLeft="211,748" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint]"
-          TopLeft="310.5,689">
+          TopLeft="308,709">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,33"
+              EndConnector="0,39"
               Start="0,0"
-              End="0,25.5">
+              End="0,31.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,25.5" />
+                    End="0,31.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -5069,14 +5075,14 @@ from dw.[FactDGTRuleSummary] drs
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,31"
+              EndConnector="0,39"
               Start="0,0"
-              End="0,23.5">
+              End="0,31.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,23.5" />
+                    End="0,31.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -5096,7 +5102,7 @@ from dw.[FactDGTRuleSummary] drs
         <NodeLayout
           Size="123,42"
           Id="Package\SEQC- detail\DFT- load equipinv location details errors\OLE_SRC"
-          TopLeft="172,63" />
+          TopLeft="173,63" />
         <NodeLayout
           Size="123,42"
           Id="Package\SEQC- detail\DFT- load equipinv location details errors\OLE_DST"
@@ -5111,7 +5117,7 @@ from dw.[FactDGTRuleSummary] drs
           TopLeft="180,152" />
         <EdgeLayout
           Id="Package\SEQC- detail\DFT- load equipinv location details errors.Paths[OLE DB Source Output]"
-          TopLeft="231.5,105">
+          TopLeft="232,105">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -5542,7 +5548,7 @@ from dw.[FactDGTRuleSummary] drs
           Id="Package\SEQC- summary\DFT- PassTotal summary\OLE_DST"
           TopLeft="169,323" />
         <NodeLayout
-          Size="130,42"
+          Size="123,42"
           Id="Package\SEQC- summary\DFT- PassTotal summary\OLE_SRC"
           TopLeft="172,66" />
         <NodeLayout
@@ -5555,7 +5561,7 @@ from dw.[FactDGTRuleSummary] drs
           TopLeft="180,152" />
         <EdgeLayout
           Id="Package\SEQC- summary\DFT- PassTotal summary.Paths[OLE DB Source Output]"
-          TopLeft="233.25,108">
+          TopLeft="231.5,108">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"

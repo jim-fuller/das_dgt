@@ -11,8 +11,8 @@
   DTS:LocaleID="1033"
   DTS:ObjectName="Master_etl_extract"
   DTS:PackageType="5"
-  DTS:VersionBuild="504"
-  DTS:VersionGUID="{FF70692B-A9E6-4DDD-9F7C-BD98404BFAE2}">
+  DTS:VersionBuild="506"
+  DTS:VersionGUID="{7C4D55BD-0FF6-4D68-9DF5-0659228AC350}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -702,27 +702,77 @@
       DTS:CreationName=""
       DTS:DTSID="{075BBC1B-329A-4481-97BB-4839E0C44D87}"
       DTS:EvaluateAsExpression="True"
-      DTS:Expression="&quot;SELECT &#xA;d.visn, d.StaName as sta3nname, l.sta6aname, l.sta5aname, a.station__no, a.station_number, a.entry_number, a.location, a.locationx, f.room_number,f.inverse_location, f.building_number, f.functionx, f.servicex&#xA;  FROM &quot; + @[$Project::CDWA06_WorkDatabaseName]  + &quot;.[Inventory].[equipment_inv_6914] a&#xA;  inner join&#xA;(select b.sta3n, b.visn, max(b.sta3nname) as StaName from &quot; &#xA;+ @[$Project::CDWA06_WorkDatabaseName]  +&quot;.[DSS_Dim].[DimLocationVha] b&#xA;group by b.sta3n, b.visn&#xA;) d&#xA;  on a.station__no = d.sta3n&#xA;  left join &quot; &#xA;+ @[$Project::CDWA06_WorkDatabaseName]  +&quot;.[Inventory].[eng_space_6928] f&#xA;  on a.location  =  format(convert(float, f.row_id), '0.######')&#xA;  &#xA;  and a.station__no = f.station__no&#xA;  left join &quot;&#xA;+ @[$Project::CDWA06_WorkDatabaseName]  +&quot;.[DSS_Dim].[DimLocationVha] l&#xA;  on a.station_number = l.sta6a&#xA;where a.type_of_entry = 'BUILDING SERVICE EQPT' &#xA;and a.disposition_date is null&quot;"
+      DTS:Expression="&quot;&#xA;SELECT&#xA;&#xA;&#x9;d.visn&#xA;&#xA;&#x9;,d.StaName as sta3nname&#xA;&#xA;&#x9;,l.sta6aname&#xA;&#xA;&#x9;,l.sta5aname&#xA;&#xA;&#x9;,a.station__no&#xA;&#xA;&#x9;,a.station_number&#xA;&#xA;&#x9;,a.entry_number&#xA;&#xA;&#x9;,a.[location]&#xA;&#xA;&#x9;,a.locationx&#xA;&#xA;&#x9;,f.room_number&#xA;&#xA;&#x9;,f.inverse_location&#xA;&#xA;&#x9;,f.building_number&#xA;&#xA;&#x9;,f.functionx&#xA;&#xA;&#x9;,f.servicex&#xA;&#xA;&#x9;,a.type_of_entry&#xA;FROM &quot; + @[$Project::CDWA06_WorkDatabaseName]  + &quot;.[Inventory].[equipment_inv_6914] AS a&#xA;&#xA;INNER JOIN (&#xA;&#xA;&#x9;SELECT&#xA;&#xA;&#x9;&#x9;b.sta3n&#xA;&#xA;&#x9;&#x9;,b.visn&#xA;&#xA;&#x9;&#x9;,MAX(b.sta3nname) as StaName&#xA;&#xA;&#x9;FROM &quot; + @[$Project::CDWA06_WorkDatabaseName]  + &quot;.[DSS_Dim].[DimLocationVha] AS b&#xA;&#xA;&#x9;GROUP BY b.sta3n, b.visn&#xA;&#xA;) AS d&#xA;&#xA;&#x9;ON a.station__no = d.sta3n&#xA;&#xA;LEFT JOIN &quot; + @[$Project::CDWA06_WorkDatabaseName]  + &quot;.[Inventory].[eng_space_6928] AS f&#xA;&#xA;&#x9;ON a.location = format(convert(float, f.row_id), '0.######')&#xA;&#xA;&#x9;AND a.station__no = f.station__no&#xA;&#xA;LEFT JOIN &quot; + @[$Project::CDWA06_WorkDatabaseName]  + &quot;.[DSS_Dim].[DimLocationVha] AS l&#xA;&#xA;&#x9;ON a.station_number = l.sta6a&#xA;&#xA;WHERE a.type_of_entry = 'BUILDING SERVICE EQPT'&#xA;&#xA;AND a.disposition_date is null&#xA;&quot;"
       DTS:IncludeInDebugDump="2345"
       DTS:Namespace="User"
       DTS:ObjectName="equipinvsql">
       <DTS:VariableValue
-        DTS:DataType="8">SELECT 
-d.visn, d.StaName as sta3nname, l.sta6aname, l.sta5aname, a.station__no, a.station_number, a.entry_number, a.location, a.locationx, f.room_number,f.inverse_location, f.building_number, f.functionx, f.servicex
-  FROM CDWWork.[Inventory].[equipment_inv_6914] a
-  inner join
-(select b.sta3n, b.visn, max(b.sta3nname) as StaName from CDWWork.[DSS_Dim].[DimLocationVha] b
-group by b.sta3n, b.visn
-) d
-  on a.station__no = d.sta3n
-  left join CDWWork.[Inventory].[eng_space_6928] f
-  on a.location  =  format(convert(float, f.row_id), '0.######')
-  
-  and a.station__no = f.station__no
-  left join CDWWork.[DSS_Dim].[DimLocationVha] l
-  on a.station_number = l.sta6a
-where a.type_of_entry = 'BUILDING SERVICE EQPT' 
-and a.disposition_date is null</DTS:VariableValue>
+        DTS:DataType="8">
+SELECT
+
+	d.visn
+
+	,d.StaName as sta3nname
+
+	,l.sta6aname
+
+	,l.sta5aname
+
+	,a.station__no
+
+	,a.station_number
+
+	,a.entry_number
+
+	,a.[location]
+
+	,a.locationx
+
+	,f.room_number
+
+	,f.inverse_location
+
+	,f.building_number
+
+	,f.functionx
+
+	,f.servicex
+
+	,a.type_of_entry
+FROM CDWWork.[Inventory].[equipment_inv_6914] AS a
+
+INNER JOIN (
+
+	SELECT
+
+		b.sta3n
+
+		,b.visn
+
+		,MAX(b.sta3nname) as StaName
+
+	FROM CDWWork.[DSS_Dim].[DimLocationVha] AS b
+
+	GROUP BY b.sta3n, b.visn
+
+) AS d
+
+	ON a.station__no = d.sta3n
+
+LEFT JOIN CDWWork.[Inventory].[eng_space_6928] AS f
+
+	ON a.location = format(convert(float, f.row_id), '0.######')
+
+	AND a.station__no = f.station__no
+
+LEFT JOIN CDWWork.[DSS_Dim].[DimLocationVha] AS l
+
+	ON a.station_number = l.sta6a
+
+WHERE a.type_of_entry = 'BUILDING SERVICE EQPT'
+
+AND a.disposition_date is null
+</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -4265,6 +4315,14 @@ and a.disposition_date is null</DTS:VariableValue>
                           cachedName="inverse_location"
                           externalMetadataColumnId="Package\SEQ-equip_inv6914\DFT- stage equipinv\OLE_DST.Inputs[OLE DB Destination Input].ExternalColumns[inverse_location]"
                           lineageId="Package\SEQ-equip_inv6914\DFT- stage equipinv\OLE_SRC.Outputs[OLE DB Source Output].Columns[inverse_location]" />
+                        <inputColumn
+                          refId="Package\SEQ-equip_inv6914\DFT- stage equipinv\OLE_DST.Inputs[OLE DB Destination Input].Columns[type_of_entry]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="8000"
+                          cachedName="type_of_entry"
+                          externalMetadataColumnId="Package\SEQ-equip_inv6914\DFT- stage equipinv\OLE_DST.Inputs[OLE DB Destination Input].ExternalColumns[type_of_entry]"
+                          lineageId="Package\SEQ-equip_inv6914\DFT- stage equipinv\OLE_SRC.Outputs[OLE DB Source Output].Columns[type_of_entry]" />
                       </inputColumns>
                       <externalMetadataColumns
                         isUsed="True">
@@ -5233,6 +5291,17 @@ and a.disposition_date is null</DTS:VariableValue>
                           lineageId="Package\SEQ-equip_inv6914\DFT- stage equipinv\OLE_SRC.Outputs[OLE DB Source Output].Columns[inverse_location]"
                           name="inverse_location"
                           truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\SEQ-equip_inv6914\DFT- stage equipinv\OLE_SRC.Outputs[OLE DB Source Output].Columns[type_of_entry]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\SEQ-equip_inv6914\DFT- stage equipinv\OLE_SRC.Outputs[OLE DB Source Output].ExternalColumns[type_of_entry]"
+                          length="8000"
+                          lineageId="Package\SEQ-equip_inv6914\DFT- stage equipinv\OLE_SRC.Outputs[OLE DB Source Output].Columns[type_of_entry]"
+                          name="type_of_entry"
+                          truncationRowDisposition="FailComponent" />
                       </outputColumns>
                       <externalMetadataColumns
                         isUsed="True">
@@ -5318,6 +5387,12 @@ and a.disposition_date is null</DTS:VariableValue>
                           dataType="str"
                           length="8000"
                           name="inverse_location" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ-equip_inv6914\DFT- stage equipinv\OLE_SRC.Outputs[OLE DB Source Output].ExternalColumns[type_of_entry]"
+                          codePage="1252"
+                          dataType="str"
+                          length="8000"
+                          name="type_of_entry" />
                       </externalMetadataColumns>
                     </output>
                     <output
@@ -5421,6 +5496,13 @@ and a.disposition_date is null</DTS:VariableValue>
                           length="8000"
                           lineageId="Package\SEQ-equip_inv6914\DFT- stage equipinv\OLE_SRC.Outputs[OLE DB Source Error Output].Columns[servicex]"
                           name="servicex" />
+                        <outputColumn
+                          refId="Package\SEQ-equip_inv6914\DFT- stage equipinv\OLE_SRC.Outputs[OLE DB Source Error Output].Columns[type_of_entry]"
+                          codePage="1252"
+                          dataType="str"
+                          length="8000"
+                          lineageId="Package\SEQ-equip_inv6914\DFT- stage equipinv\OLE_SRC.Outputs[OLE DB Source Error Output].Columns[type_of_entry]"
+                          name="type_of_entry" />
                         <outputColumn
                           refId="Package\SEQ-equip_inv6914\DFT- stage equipinv\OLE_SRC.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
                           dataType="i4"
@@ -5665,7 +5747,7 @@ and a.disposition_date is null</DTS:VariableValue>
     design-time-name="Package\SEQ-equip_inv6914\DFT- stage equipinv">
     <LayoutInfo>
       <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="99,42"
           Id="Package\SEQ-equip_inv6914\DFT- stage equipinv\DER"
@@ -5701,9 +5783,7 @@ and a.disposition_date is null</DTS:VariableValue>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -5725,9 +5805,7 @@ and a.disposition_date is null</DTS:VariableValue>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -5749,9 +5827,7 @@ and a.disposition_date is null</DTS:VariableValue>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
