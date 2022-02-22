@@ -11,8 +11,8 @@
   DTS:LocaleID="1033"
   DTS:ObjectName="Master_etl_extract"
   DTS:PackageType="5"
-  DTS:VersionBuild="540"
-  DTS:VersionGUID="{83ACFB50-5769-47F3-B708-1362B88A1C7A}">
+  DTS:VersionBuild="549"
+  DTS:VersionGUID="{2028DBF3-38EF-4EFD-B058-C9CD9B8A32CB}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -64,6 +64,18 @@
           DTS:ConnectionString="Data Source=vafscmul22302,44444;Initial Catalog=DGT;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
       </DTS:ObjectData>
     </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[Rules Bucket v4.2_mod.xlsx]"
+      DTS:CreationName="EXCEL"
+      DTS:DTSID="{14BF0513-9063-4AC0-965E-4A0D3D5DBA89}"
+      DTS:ObjectName="Rules Bucket v4.2_mod.xlsx">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="0"
+          DTS:ConnectRetryInterval="0"
+          DTS:ConnectionString="Provider=Microsoft.ACE.OLEDB.12.0;Data Source=\\vhacdwdwhmul03.vha.med.va.gov\Projects\FSC_DASVALORGOV\Rules Bucket v4.2_mod.xlsx;Extended Properties=&quot;Excel 12.0 XML;HDR=YES&quot;;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
   </DTS:ConnectionManagers>
   <DTS:PackageParameters>
     <DTS:PackageParameter
@@ -99,13 +111,13 @@ group by processid , visn,station__no, SubjectAreaNM, source </DTS:VariableValue
       DTS:CreationName=""
       DTS:DTSID="{854B4422-2F19-40C1-9BEC-AF2538909370}"
       DTS:EvaluateAsExpression="True"
-      DTS:Expression="&quot;select processid , visn, station__no, SubjectAreaNM, source,errormessage, count(*) as metriccnt  from  &quot; + @[$Project::dwschema]  + &quot;.FactDGTequipinv6914ErrorDetails &#xA;group by processid , visn,station__no, SubjectAreaNM, source, errormessage having processid = &quot; + (DT_WSTR, 12) @[User::processid]  + &quot;&quot;"
+      DTS:Expression="&quot;select processid , visn, station__no, SubjectAreaNM, source,errormessage, count(*) as metriccnt, RuleID  from  &quot; + @[$Project::dwschema]  + &quot;.FactDGTequipinv6914ErrorDetails &#xA;group by processid , visn,station__no, SubjectAreaNM, source, errormessage, RuleID having processid = &quot; + (DT_WSTR, 12) @[User::processid]  + &quot;&quot;"
       DTS:IncludeInDebugDump="2345"
       DTS:Namespace="User"
       DTS:ObjectName="dgterrdetail">
       <DTS:VariableValue
-        DTS:DataType="8">select processid , visn, station__no, SubjectAreaNM, source,errormessage, count(*) as metriccnt  from  dw.FactDGTequipinv6914ErrorDetails 
-group by processid , visn,station__no, SubjectAreaNM, source, errormessage having processid = 5</DTS:VariableValue>
+        DTS:DataType="8">select processid , visn, station__no, SubjectAreaNM, source,errormessage, count(*) as metriccnt, RuleID  from  dw.FactDGTequipinv6914ErrorDetails 
+group by processid , visn,station__no, SubjectAreaNM, source, errormessage, RuleID having processid = 5</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -280,6 +292,11 @@ from dw.[FactDGTRuleSummary] drs
                           cachedLength="255"
                           cachedName="sta3nname"
                           lineageId="Package\SEQC- detail\DFT- load equipinv location details errors\OLE_SRC.Outputs[OLE DB Source Output].Columns[sta3nname]" />
+                        <inputColumn
+                          refId="Package\SEQC- detail\DFT- load equipinv location details errors\DCV.Inputs[Data Conversion Input].Columns[RuleID]"
+                          cachedDataType="i4"
+                          cachedName="RuleID"
+                          lineageId="Package\SEQC- detail\DFT- load equipinv location details errors\DER.Outputs[Derived Column Output].Columns[RuleID]" />
                       </inputColumns>
                       <externalMetadataColumns />
                     </input>
@@ -395,6 +412,26 @@ from dw.[FactDGTRuleSummary] drs
                               dataType="System.Int32"
                               description="Specifies the input column used as the source of data for the conversion."
                               name="SourceInputColumnLineageID">#{Package\SEQC- detail\DFT- load equipinv location details errors\OLE_SRC.Outputs[OLE DB Source Output].Columns[sta3nname]}</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\SEQC- detail\DFT- load equipinv location details errors\DCV.Outputs[Data Conversion Output].Columns[Copy of RuleID]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          lineageId="Package\SEQC- detail\DFT- load equipinv location details errors\DCV.Outputs[Data Conversion Output].Columns[Copy of RuleID]"
+                          name="Copy of RuleID"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the input column used as the source of data for the conversion."
+                              name="SourceInputColumnLineageID">#{Package\SEQC- detail\DFT- load equipinv location details errors\DER.Outputs[Derived Column Output].Columns[RuleID]}</property>
                             <property
                               dataType="System.Boolean"
                               description="Indicates whether the column uses the faster, locale-neutral parsing routines."
@@ -585,6 +622,28 @@ from dw.[FactDGTRuleSummary] drs
                               description="Derived Column Friendly Expression"
                               expressionType="Notify"
                               name="FriendlyExpression">@[User::processid]</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\SEQC- detail\DFT- load equipinv location details errors\DER.Outputs[Derived Column Output].Columns[RuleID]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          lineageId="Package\SEQC- detail\DFT- load equipinv location details errors\DER.Outputs[Derived Column Output].Columns[RuleID]"
+                          name="RuleID"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">2</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">2</property>
                           </properties>
                         </outputColumn>
                       </outputColumns>
@@ -833,6 +892,12 @@ from dw.[FactDGTRuleSummary] drs
                           cachedName="Copy of sta3nname"
                           externalMetadataColumnId="Package\SEQC- detail\DFT- load equipinv location details errors\OLE_DST.Inputs[OLE DB Destination Input].ExternalColumns[sta3nname]"
                           lineageId="Package\SEQC- detail\DFT- load equipinv location details errors\DCV.Outputs[Data Conversion Output].Columns[Copy of sta3nname]" />
+                        <inputColumn
+                          refId="Package\SEQC- detail\DFT- load equipinv location details errors\OLE_DST.Inputs[OLE DB Destination Input].Columns[Copy of RuleID]"
+                          cachedDataType="i4"
+                          cachedName="Copy of RuleID"
+                          externalMetadataColumnId="Package\SEQC- detail\DFT- load equipinv location details errors\OLE_DST.Inputs[OLE DB Destination Input].ExternalColumns[RuleID]"
+                          lineageId="Package\SEQC- detail\DFT- load equipinv location details errors\DCV.Outputs[Data Conversion Output].Columns[Copy of RuleID]" />
                       </inputColumns>
                       <externalMetadataColumns
                         isUsed="True">
@@ -944,6 +1009,10 @@ from dw.[FactDGTRuleSummary] drs
                           dataType="str"
                           length="250"
                           name="sta5aname" />
+                        <externalMetadataColumn
+                          refId="Package\SEQC- detail\DFT- load equipinv location details errors\OLE_DST.Inputs[OLE DB Destination Input].ExternalColumns[RuleID]"
+                          dataType="i4"
+                          name="RuleID" />
                       </externalMetadataColumns>
                     </input>
                   </inputs>
@@ -1445,6 +1514,11 @@ from dw.[FactDGTRuleSummary] drs
                           cachedLength="255"
                           cachedName="sta3nname"
                           lineageId="Package\SEQC- detail\DFT- load equipinv room details errors\OLE_SRC.Outputs[OLE DB Source Output].Columns[sta3nname]" />
+                        <inputColumn
+                          refId="Package\SEQC- detail\DFT- load equipinv room details errors\DCV.Inputs[Data Conversion Input].Columns[RuleID]"
+                          cachedDataType="i4"
+                          cachedName="RuleID"
+                          lineageId="Package\SEQC- detail\DFT- load equipinv room details errors\DER.Outputs[Derived Column Output].Columns[RuleID]" />
                       </inputColumns>
                       <externalMetadataColumns />
                     </input>
@@ -1560,6 +1634,26 @@ from dw.[FactDGTRuleSummary] drs
                               dataType="System.Int32"
                               description="Specifies the input column used as the source of data for the conversion."
                               name="SourceInputColumnLineageID">#{Package\SEQC- detail\DFT- load equipinv room details errors\OLE_SRC.Outputs[OLE DB Source Output].Columns[sta3nname]}</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\SEQC- detail\DFT- load equipinv room details errors\DCV.Outputs[Data Conversion Output].Columns[Copy of RuleID]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          lineageId="Package\SEQC- detail\DFT- load equipinv room details errors\DCV.Outputs[Data Conversion Output].Columns[Copy of RuleID]"
+                          name="Copy of RuleID"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the input column used as the source of data for the conversion."
+                              name="SourceInputColumnLineageID">#{Package\SEQC- detail\DFT- load equipinv room details errors\DER.Outputs[Derived Column Output].Columns[RuleID]}</property>
                             <property
                               dataType="System.Boolean"
                               description="Indicates whether the column uses the faster, locale-neutral parsing routines."
@@ -1750,6 +1844,28 @@ from dw.[FactDGTRuleSummary] drs
                               description="Derived Column Friendly Expression"
                               expressionType="Notify"
                               name="FriendlyExpression">@[User::processid]</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\SEQC- detail\DFT- load equipinv room details errors\DER.Outputs[Derived Column Output].Columns[RuleID]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          lineageId="Package\SEQC- detail\DFT- load equipinv room details errors\DER.Outputs[Derived Column Output].Columns[RuleID]"
+                          name="RuleID"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">1</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">1</property>
                           </properties>
                         </outputColumn>
                       </outputColumns>
@@ -1998,6 +2114,12 @@ from dw.[FactDGTRuleSummary] drs
                           cachedName="Copy of sta3nname"
                           externalMetadataColumnId="Package\SEQC- detail\DFT- load equipinv room details errors\OLE_DST.Inputs[OLE DB Destination Input].ExternalColumns[sta3nname]"
                           lineageId="Package\SEQC- detail\DFT- load equipinv room details errors\DCV.Outputs[Data Conversion Output].Columns[Copy of sta3nname]" />
+                        <inputColumn
+                          refId="Package\SEQC- detail\DFT- load equipinv room details errors\OLE_DST.Inputs[OLE DB Destination Input].Columns[Copy of RuleID]"
+                          cachedDataType="i4"
+                          cachedName="Copy of RuleID"
+                          externalMetadataColumnId="Package\SEQC- detail\DFT- load equipinv room details errors\OLE_DST.Inputs[OLE DB Destination Input].ExternalColumns[RuleID]"
+                          lineageId="Package\SEQC- detail\DFT- load equipinv room details errors\DCV.Outputs[Data Conversion Output].Columns[Copy of RuleID]" />
                       </inputColumns>
                       <externalMetadataColumns
                         isUsed="True">
@@ -2109,6 +2231,10 @@ from dw.[FactDGTRuleSummary] drs
                           dataType="str"
                           length="250"
                           name="sta5aname" />
+                        <externalMetadataColumn
+                          refId="Package\SEQC- detail\DFT- load equipinv room details errors\OLE_DST.Inputs[OLE DB Destination Input].ExternalColumns[RuleID]"
+                          dataType="i4"
+                          name="RuleID" />
                       </externalMetadataColumns>
                     </input>
                   </inputs>
@@ -2988,6 +3114,12 @@ from dw.[FactDGTRuleSummary] drs
                           cachedName="Copy of errormessage"
                           externalMetadataColumnId="Package\SEQC- summary\DFT- Error detail summary\OLE_DST.Inputs[OLE DB Destination Input].ExternalColumns[MetricNM]"
                           lineageId="Package\SEQC- summary\DFT- Error detail summary\DCV.Outputs[Data Conversion Output].Columns[Copy of errormessage]" />
+                        <inputColumn
+                          refId="Package\SEQC- summary\DFT- Error detail summary\OLE_DST.Inputs[OLE DB Destination Input].Columns[RuleID]"
+                          cachedDataType="i4"
+                          cachedName="RuleID"
+                          externalMetadataColumnId="Package\SEQC- summary\DFT- Error detail summary\OLE_DST.Inputs[OLE DB Destination Input].ExternalColumns[RuleID]"
+                          lineageId="Package\SEQC- summary\DFT- Error detail summary\OLE_SRC.Outputs[OLE DB Source Output].Columns[RuleID]" />
                       </inputColumns>
                       <externalMetadataColumns
                         isUsed="True">
@@ -3049,6 +3181,10 @@ from dw.[FactDGTRuleSummary] drs
                           refId="Package\SEQC- summary\DFT- Error detail summary\OLE_DST.Inputs[OLE DB Destination Input].ExternalColumns[visn]"
                           dataType="i4"
                           name="visn" />
+                        <externalMetadataColumn
+                          refId="Package\SEQC- summary\DFT- Error detail summary\OLE_DST.Inputs[OLE DB Destination Input].ExternalColumns[RuleID]"
+                          dataType="i4"
+                          name="RuleID" />
                       </externalMetadataColumns>
                     </input>
                   </inputs>
@@ -3209,6 +3345,15 @@ from dw.[FactDGTRuleSummary] drs
                           lineageId="Package\SEQC- summary\DFT- Error detail summary\OLE_SRC.Outputs[OLE DB Source Output].Columns[metriccnt]"
                           name="metriccnt"
                           truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\SEQC- summary\DFT- Error detail summary\OLE_SRC.Outputs[OLE DB Source Output].Columns[RuleID]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\SEQC- summary\DFT- Error detail summary\OLE_SRC.Outputs[OLE DB Source Output].ExternalColumns[RuleID]"
+                          lineageId="Package\SEQC- summary\DFT- Error detail summary\OLE_SRC.Outputs[OLE DB Source Output].Columns[RuleID]"
+                          name="RuleID"
+                          truncationRowDisposition="FailComponent" />
                       </outputColumns>
                       <externalMetadataColumns
                         isUsed="True">
@@ -3248,6 +3393,10 @@ from dw.[FactDGTRuleSummary] drs
                           refId="Package\SEQC- summary\DFT- Error detail summary\OLE_SRC.Outputs[OLE DB Source Output].ExternalColumns[metriccnt]"
                           dataType="i4"
                           name="metriccnt" />
+                        <externalMetadataColumn
+                          refId="Package\SEQC- summary\DFT- Error detail summary\OLE_SRC.Outputs[OLE DB Source Output].ExternalColumns[RuleID]"
+                          dataType="i4"
+                          name="RuleID" />
                       </externalMetadataColumns>
                     </output>
                     <output
@@ -3298,6 +3447,11 @@ from dw.[FactDGTRuleSummary] drs
                           dataType="i4"
                           lineageId="Package\SEQC- summary\DFT- Error detail summary\OLE_SRC.Outputs[OLE DB Source Error Output].Columns[metriccnt]"
                           name="metriccnt" />
+                        <outputColumn
+                          refId="Package\SEQC- summary\DFT- Error detail summary\OLE_SRC.Outputs[OLE DB Source Error Output].Columns[RuleID]"
+                          dataType="i4"
+                          lineageId="Package\SEQC- summary\DFT- Error detail summary\OLE_SRC.Outputs[OLE DB Source Error Output].Columns[RuleID]"
+                          name="RuleID" />
                         <outputColumn
                           refId="Package\SEQC- summary\DFT- Error detail summary\OLE_SRC.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
                           dataType="i4"
@@ -3802,6 +3956,10 @@ from dw.[FactDGTRuleSummary] drs
                           refId="Package\SEQC- summary\DFT- Error summary\OLE_DST.Inputs[OLE DB Destination Input].ExternalColumns[visn]"
                           dataType="i4"
                           name="visn" />
+                        <externalMetadataColumn
+                          refId="Package\SEQC- summary\DFT- Error summary\OLE_DST.Inputs[OLE DB Destination Input].ExternalColumns[RuleID]"
+                          dataType="i4"
+                          name="RuleID" />
                       </externalMetadataColumns>
                     </input>
                   </inputs>
@@ -4114,7 +4272,7 @@ from dw.[FactDGTRuleSummary] drs
                         <inputColumn
                           refId="Package\SEQC- summary\DFT- PassTotal summary\DCV.Inputs[Data Conversion Input].Columns[subjectareanm]"
                           cachedDataType="wstr"
-                          cachedLength="9"
+                          cachedLength="26"
                           cachedName="subjectareanm"
                           lineageId="Package\SEQC- summary\DFT- PassTotal summary\DER.Outputs[Derived Column Output].Columns[subjectareanm]" />
                         <inputColumn
@@ -4367,7 +4525,7 @@ from dw.[FactDGTRuleSummary] drs
                           dataType="wstr"
                           errorOrTruncationOperation="Computation"
                           errorRowDisposition="FailComponent"
-                          length="9"
+                          length="26"
                           lineageId="Package\SEQC- summary\DFT- PassTotal summary\DER.Outputs[Derived Column Output].Columns[subjectareanm]"
                           name="subjectareanm"
                           truncationRowDisposition="FailComponent">
@@ -4376,13 +4534,13 @@ from dw.[FactDGTRuleSummary] drs
                               containsID="true"
                               dataType="System.String"
                               description="Derived Column Expression"
-                              name="Expression">"AEMS/MERS"</property>
+                              name="Expression">"Building Service Equipment"</property>
                             <property
                               containsID="true"
                               dataType="System.String"
                               description="Derived Column Friendly Expression"
                               expressionType="Notify"
-                              name="FriendlyExpression">"AEMS/MERS"</property>
+                              name="FriendlyExpression">"Building Service Equipment"</property>
                           </properties>
                         </outputColumn>
                         <outputColumn
@@ -4633,6 +4791,10 @@ from dw.[FactDGTRuleSummary] drs
                           refId="Package\SEQC- summary\DFT- PassTotal summary\OLE_DST.Inputs[OLE DB Destination Input].ExternalColumns[visn]"
                           dataType="i4"
                           name="visn" />
+                        <externalMetadataColumn
+                          refId="Package\SEQC- summary\DFT- PassTotal summary\OLE_DST.Inputs[OLE DB Destination Input].ExternalColumns[RuleID]"
+                          dataType="i4"
+                          name="RuleID" />
                       </externalMetadataColumns>
                     </input>
                   </inputs>
@@ -4886,6 +5048,1208 @@ from dw.[FactDGTRuleSummary] drs
           SQLTask:SqlStatementSource="User::upddgttotcnt" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
       </DTS:ObjectData>
     </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Test connection to MUL03 SAN Location for future use"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:Description="Sequence Container"
+      DTS:DTSID="{2E08BE0D-4303-4536-8D79-9FD1E1D0DDA0}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Test connection to MUL03 SAN Location for future use">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:Description="Data Flow Task"
+          DTS:DTSID="{3385317E-9732-48AF-8095-6634F689E3C4}"
+          DTS:ExecutableType="Microsoft.Pipeline"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Data Flow Task"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <pipeline
+              version="1">
+              <components>
+                <component
+                  refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source"
+                  componentClassID="Microsoft.ExcelSource"
+                  contactInfo="Excel Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
+                  description="Excel Source"
+                  name="Excel Source"
+                  usesDispositions="true"
+                  version="1">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset">Rules$</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                    <property
+                      dataType="System.String"
+                      description="The variable that contains the SQL command to be executed."
+                      name="SqlCommandVariable"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">0</property>
+                    <property
+                      dataType="System.String"
+                      description="The mapping from parameters in the SQL command to variables."
+                      name="ParameterMapping"></property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[Rules Bucket v4.2_mod.xlsx]"
+                      connectionManagerRefId="Package.ConnectionManagers[Rules Bucket v4.2_mod.xlsx]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <outputs>
+                    <output
+                      refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output]"
+                      name="Excel Source Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Column1]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Column1]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Column1]"
+                          name="Column1"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Functional Community]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Functional Community]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Functional Community]"
+                          name="Functional Community"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Subject Area]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Subject Area]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Subject Area]"
+                          name="Subject Area"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Souce of Error]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Souce of Error]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Souce of Error]"
+                          name="Souce of Error"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Source Field]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Source Field]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Source Field]"
+                          name="Source Field"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Legacy System Required]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Legacy System Required]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Legacy System Required]"
+                          name="Legacy System Required"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[DM Note]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[DM Note]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[DM Note]"
+                          name="DM Note"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Rule Name]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Rule Name]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Rule Name]"
+                          name="Rule Name"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Level]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Level]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Level]"
+                          name="Level"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Location]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Location]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Location]"
+                          name="Location"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Data Goverance Guidance]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Data Goverance Guidance]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Data Goverance Guidance]"
+                          name="Data Goverance Guidance"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F12]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F12]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F12]"
+                          name="F12"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F13]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F13]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F13]"
+                          name="F13"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F14]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F14]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F14]"
+                          name="F14"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F15]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F15]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F15]"
+                          name="F15"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F16]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F16]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F16]"
+                          name="F16"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F17]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F17]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F17]"
+                          name="F17"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F18]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F18]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F18]"
+                          name="F18"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F19]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F19]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F19]"
+                          name="F19"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F20]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F20]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F20]"
+                          name="F20"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F21]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F21]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F21]"
+                          name="F21"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F22]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F22]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F22]"
+                          name="F22"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F23]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F23]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F23]"
+                          name="F23"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F24]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F24]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F24]"
+                          name="F24"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F25]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F25]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F25]"
+                          name="F25"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F26]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F26]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F26]"
+                          name="F26"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F27]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F27]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F27]"
+                          name="F27"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F28]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F28]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F28]"
+                          name="F28"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F29]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F29]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F29]"
+                          name="F29"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F30]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F30]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F30]"
+                          name="F30"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F31]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F31]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F31]"
+                          name="F31"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F32]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F32]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F32]"
+                          name="F32"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F33]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F33]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F33]"
+                          name="F33"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F34]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F34]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F34]"
+                          name="F34"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F35]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F35]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F35]"
+                          name="F35"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F36]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F36]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F36]"
+                          name="F36"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F37]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F37]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F37]"
+                          name="F37"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F38]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F38]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F38]"
+                          name="F38"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F39]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F39]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F39]"
+                          name="F39"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F40]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F40]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F40]"
+                          name="F40"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F41]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F41]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F41]"
+                          name="F41"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F42]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F42]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F42]"
+                          name="F42"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F43]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F43]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F43]"
+                          name="F43"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F44]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F44]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F44]"
+                          name="F44"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F45]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F45]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F45]"
+                          name="F45"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F46]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F46]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F46]"
+                          name="F46"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F47]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F47]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F47]"
+                          name="F47"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F48]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F48]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F48]"
+                          name="F48"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F49]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F49]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F49]"
+                          name="F49"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F50]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F50]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F50]"
+                          name="F50"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F51]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F51]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F51]"
+                          name="F51"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F52]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F52]"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[F52]"
+                          name="F52"
+                          truncationRowDisposition="FailComponent" />
+                      </outputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Column1]"
+                          dataType="wstr"
+                          length="255"
+                          name="Column1" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Functional Community]"
+                          dataType="wstr"
+                          length="255"
+                          name="Functional Community" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Subject Area]"
+                          dataType="wstr"
+                          length="255"
+                          name="Subject Area" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Souce of Error]"
+                          dataType="wstr"
+                          length="255"
+                          name="Souce of Error" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Source Field]"
+                          dataType="wstr"
+                          length="255"
+                          name="Source Field" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Legacy System Required]"
+                          dataType="wstr"
+                          length="255"
+                          name="Legacy System Required" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[DM Note]"
+                          dataType="wstr"
+                          length="255"
+                          name="DM Note" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Rule Name]"
+                          dataType="wstr"
+                          length="255"
+                          name="Rule Name" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Level]"
+                          dataType="wstr"
+                          length="255"
+                          name="Level" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Location]"
+                          dataType="wstr"
+                          length="255"
+                          name="Location" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Data Goverance Guidance]"
+                          dataType="wstr"
+                          length="255"
+                          name="Data Goverance Guidance" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F12]"
+                          dataType="wstr"
+                          length="255"
+                          name="F12" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F13]"
+                          dataType="wstr"
+                          length="255"
+                          name="F13" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F14]"
+                          dataType="wstr"
+                          length="255"
+                          name="F14" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F15]"
+                          dataType="wstr"
+                          length="255"
+                          name="F15" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F16]"
+                          dataType="wstr"
+                          length="255"
+                          name="F16" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F17]"
+                          dataType="wstr"
+                          length="255"
+                          name="F17" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F18]"
+                          dataType="wstr"
+                          length="255"
+                          name="F18" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F19]"
+                          dataType="wstr"
+                          length="255"
+                          name="F19" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F20]"
+                          dataType="wstr"
+                          length="255"
+                          name="F20" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F21]"
+                          dataType="wstr"
+                          length="255"
+                          name="F21" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F22]"
+                          dataType="wstr"
+                          length="255"
+                          name="F22" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F23]"
+                          dataType="wstr"
+                          length="255"
+                          name="F23" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F24]"
+                          dataType="wstr"
+                          length="255"
+                          name="F24" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F25]"
+                          dataType="wstr"
+                          length="255"
+                          name="F25" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F26]"
+                          dataType="wstr"
+                          length="255"
+                          name="F26" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F27]"
+                          dataType="wstr"
+                          length="255"
+                          name="F27" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F28]"
+                          dataType="wstr"
+                          length="255"
+                          name="F28" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F29]"
+                          dataType="wstr"
+                          length="255"
+                          name="F29" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F30]"
+                          dataType="wstr"
+                          length="255"
+                          name="F30" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F31]"
+                          dataType="wstr"
+                          length="255"
+                          name="F31" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F32]"
+                          dataType="wstr"
+                          length="255"
+                          name="F32" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F33]"
+                          dataType="wstr"
+                          length="255"
+                          name="F33" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F34]"
+                          dataType="wstr"
+                          length="255"
+                          name="F34" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F35]"
+                          dataType="wstr"
+                          length="255"
+                          name="F35" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F36]"
+                          dataType="wstr"
+                          length="255"
+                          name="F36" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F37]"
+                          dataType="wstr"
+                          length="255"
+                          name="F37" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F38]"
+                          dataType="wstr"
+                          length="255"
+                          name="F38" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F39]"
+                          dataType="wstr"
+                          length="255"
+                          name="F39" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F40]"
+                          dataType="wstr"
+                          length="255"
+                          name="F40" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F41]"
+                          dataType="wstr"
+                          length="255"
+                          name="F41" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F42]"
+                          dataType="wstr"
+                          length="255"
+                          name="F42" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F43]"
+                          dataType="wstr"
+                          length="255"
+                          name="F43" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F44]"
+                          dataType="wstr"
+                          length="255"
+                          name="F44" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F45]"
+                          dataType="wstr"
+                          length="255"
+                          name="F45" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F46]"
+                          dataType="wstr"
+                          length="255"
+                          name="F46" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F47]"
+                          dataType="wstr"
+                          length="255"
+                          name="F47" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F48]"
+                          dataType="wstr"
+                          length="255"
+                          name="F48" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F49]"
+                          dataType="wstr"
+                          length="255"
+                          name="F49" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F50]"
+                          dataType="wstr"
+                          length="255"
+                          name="F50" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F51]"
+                          dataType="wstr"
+                          length="255"
+                          name="F51" />
+                        <externalMetadataColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[F52]"
+                          dataType="wstr"
+                          length="255"
+                          name="F52" />
+                      </externalMetadataColumns>
+                    </output>
+                    <output
+                      refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output]"
+                      isErrorOut="true"
+                      name="Excel Source Error Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Column1]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Column1]"
+                          name="Column1" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Functional Community]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Functional Community]"
+                          name="Functional Community" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Subject Area]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Subject Area]"
+                          name="Subject Area" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Souce of Error]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Souce of Error]"
+                          name="Souce of Error" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Source Field]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Source Field]"
+                          name="Source Field" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Legacy System Required]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Legacy System Required]"
+                          name="Legacy System Required" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[DM Note]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[DM Note]"
+                          name="DM Note" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Rule Name]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Rule Name]"
+                          name="Rule Name" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Level]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Level]"
+                          name="Level" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Location]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Location]"
+                          name="Location" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Data Goverance Guidance]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Data Goverance Guidance]"
+                          name="Data Goverance Guidance" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F12]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F12]"
+                          name="F12" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F13]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F13]"
+                          name="F13" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F14]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F14]"
+                          name="F14" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F15]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F15]"
+                          name="F15" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F16]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F16]"
+                          name="F16" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F17]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F17]"
+                          name="F17" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F18]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F18]"
+                          name="F18" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F19]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F19]"
+                          name="F19" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F20]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F20]"
+                          name="F20" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F21]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F21]"
+                          name="F21" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F22]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F22]"
+                          name="F22" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F23]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F23]"
+                          name="F23" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F24]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F24]"
+                          name="F24" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F25]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F25]"
+                          name="F25" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F26]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F26]"
+                          name="F26" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F27]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F27]"
+                          name="F27" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F28]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F28]"
+                          name="F28" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F29]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F29]"
+                          name="F29" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F30]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F30]"
+                          name="F30" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F31]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F31]"
+                          name="F31" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F32]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F32]"
+                          name="F32" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F33]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F33]"
+                          name="F33" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F34]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F34]"
+                          name="F34" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F35]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F35]"
+                          name="F35" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F36]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F36]"
+                          name="F36" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F37]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F37]"
+                          name="F37" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F38]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F38]"
+                          name="F38" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F39]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F39]"
+                          name="F39" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F40]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F40]"
+                          name="F40" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F41]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F41]"
+                          name="F41" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F42]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F42]"
+                          name="F42" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F43]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F43]"
+                          name="F43" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F44]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F44]"
+                          name="F44" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F45]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F45]"
+                          name="F45" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F46]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F46]"
+                          name="F46" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F47]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F47]"
+                          name="F47" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F48]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F48]"
+                          name="F48" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F49]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F49]"
+                          name="F49" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F50]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F50]"
+                          name="F50" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F51]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F51]"
+                          name="F51" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F52]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[F52]"
+                          name="F52" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+              </components>
+            </pipeline>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+    </DTS:Executable>
   </DTS:Executables>
   <DTS:PrecedenceConstraints>
     <DTS:PrecedenceConstraint
@@ -4904,6 +6268,14 @@ from dw.[FactDGTRuleSummary] drs
       DTS:LogicalAnd="True"
       DTS:ObjectName="Constraint 1"
       DTS:To="Package\SEQC- summary" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{CD632441-0D08-4463-91FA-282BA3B9920E}"
+      DTS:From="Package\Test connection to MUL03 SAN Location for future use"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\SEQC- detail" />
   </DTS:PrecedenceConstraints>
   <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
 <!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
@@ -4916,7 +6288,7 @@ from dw.[FactDGTRuleSummary] drs
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="211,42"
           Id="Package\SEQC- detail\DFT- load equipinv location details errors"
@@ -4924,25 +6296,25 @@ from dw.[FactDGTRuleSummary] drs
         <NodeLayout
           Size="193,57"
           Id="Package\SEQC- detail\DFT- load equipinv room details errors"
-          TopLeft="51,82" />
+          TopLeft="48,83" />
         <NodeLayout
           Size="167,42"
           Id="Package\SEQC- detail\SQL- get processid"
           TopLeft="57,12.5" />
         <EdgeLayout
           Id="Package\SEQC- detail.PrecedenceConstraints[Constraint]"
-          TopLeft="144,139">
+          TopLeft="142.5,140">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,29"
+              EndConnector="0,28"
               Start="0,0"
-              End="0,21.5">
+              End="0,20.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,21.5" />
+                    End="0,20.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -4953,18 +6325,18 @@ from dw.[FactDGTRuleSummary] drs
         </EdgeLayout>
         <EdgeLayout
           Id="Package\SEQC- detail.PrecedenceConstraints[Constraint 1]"
-          TopLeft="144,54.5">
+          TopLeft="142.5,54.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,27.5"
+              EndConnector="0,28.5"
               Start="0,0"
-              End="0,20">
+              End="0,21">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,20" />
+                    End="0,21" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -4979,7 +6351,7 @@ from dw.[FactDGTRuleSummary] drs
           PanelSize="294,265"
           Size="294,308"
           Id="Package\SEQC- detail"
-          TopLeft="156,59" />
+          TopLeft="156,230.666666666667" />
         <NodeLayout
           Size="209,42"
           Id="Package\SEQC- summary\DFT- Error detail summary"
@@ -5042,14 +6414,14 @@ from dw.[FactDGTRuleSummary] drs
           PanelSize="365,260"
           Size="365,303"
           Id="Package\SEQC- summary"
-          TopLeft="125,406" />
+          TopLeft="125,590.999999999999" />
         <NodeLayout
           Size="195,42"
           Id="Package\SQL- update total count"
-          TopLeft="211,748" />
+          TopLeft="211,932.999999999999" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint]"
-          TopLeft="308,709">
+          TopLeft="308,893.999999999999">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -5071,18 +6443,51 @@ from dw.[FactDGTRuleSummary] drs
         </EdgeLayout>
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 1]"
-          TopLeft="305.25,367">
+          TopLeft="305.25,538.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,39"
+              EndConnector="0,52.3333333333318"
               Start="0,0"
-              End="0,31.5">
+              End="0,44.8333333333318">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,31.5" />
+                    End="0,44.8333333333318" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="151,42"
+          Id="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task"
+          TopLeft="121.222222222222,20.2222222222224" />
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="410,123"
+          Size="410,166"
+          Id="Package\Test connection to MUL03 SAN Location for future use"
+          TopLeft="95.5555555555552,15.5555555555556" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="301.777777777778,181.555555555556">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,49.1111111111113"
+              Start="0,0"
+              End="0,41.6111111111113">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,41.6111111111113" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -5098,11 +6503,11 @@ from dw.[FactDGTRuleSummary] drs
     design-time-name="Package\SEQC- detail\DFT- load equipinv location details errors">
     <LayoutInfo>
       <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
-          Size="123,42"
-          Id="Package\SEQC- detail\DFT- load equipinv location details errors\OLE_SRC"
-          TopLeft="173,63" />
+          Size="99,42"
+          Id="Package\SEQC- detail\DFT- load equipinv location details errors\DER"
+          TopLeft="181,153" />
         <NodeLayout
           Size="123,42"
           Id="Package\SEQC- detail\DFT- load equipinv location details errors\OLE_DST"
@@ -5112,51 +6517,55 @@ from dw.[FactDGTRuleSummary] drs
           Id="Package\SEQC- detail\DFT- load equipinv location details errors\DCV"
           TopLeft="184,240" />
         <NodeLayout
-          Size="99,42"
-          Id="Package\SEQC- detail\DFT- load equipinv location details errors\DER"
-          TopLeft="180,152" />
+          Size="123,42"
+          Id="Package\SEQC- detail\DFT- load equipinv location details errors\OLE_SRC"
+          TopLeft="174,63" />
         <EdgeLayout
           Id="Package\SEQC- detail\DFT- load equipinv location details errors.Paths[OLE DB Source Output]"
-          TopLeft="232,105">
+          TopLeft="233,105">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,47"
+              EndConnector="0,48"
               Start="0,0"
-              End="0,39.5">
+              End="0,40.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,39.5" />
+                    End="0,40.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\SEQC- detail\DFT- load equipinv location details errors.Paths[Derived Column Output]"
-          TopLeft="231.5,194">
+          TopLeft="232,195">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,46"
+              EndConnector="0,45"
               Start="0,0"
-              End="0,38.5">
+              End="0,37.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,38.5" />
+                    End="0,37.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -5178,20 +6587,14 @@ from dw.[FactDGTRuleSummary] drs
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
     </LayoutInfo>
   </TaskHost>
-  <PipelineComponentMetadata
-    design-time-name="Package\SEQC- detail\DFT- load equipinv location details errors\OLE_SRC">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
   <PipelineComponentMetadata
     design-time-name="Package\SEQC- detail\DFT- load equipinv location details errors\OLE_DST">
     <Properties>
@@ -5205,15 +6608,23 @@ from dw.[FactDGTRuleSummary] drs
       </Property>
     </Properties>
   </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\SEQC- detail\DFT- load equipinv location details errors\OLE_SRC">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
   <TaskHost
     design-time-name="Package\SEQC- detail\DFT- load equipinv room details errors">
     <LayoutInfo>
       <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
-          Size="123,42"
-          Id="Package\SEQC- detail\DFT- load equipinv room details errors\OLE_SRC"
-          TopLeft="172,63" />
+          Size="99,42"
+          Id="Package\SEQC- detail\DFT- load equipinv room details errors\DER"
+          TopLeft="180,152" />
         <NodeLayout
           Size="123,42"
           Id="Package\SEQC- detail\DFT- load equipinv room details errors\OLE_DST"
@@ -5223,9 +6634,9 @@ from dw.[FactDGTRuleSummary] drs
           Id="Package\SEQC- detail\DFT- load equipinv room details errors\DCV"
           TopLeft="184,240" />
         <NodeLayout
-          Size="99,42"
-          Id="Package\SEQC- detail\DFT- load equipinv room details errors\DER"
-          TopLeft="180,152" />
+          Size="123,42"
+          Id="Package\SEQC- detail\DFT- load equipinv room details errors\OLE_SRC"
+          TopLeft="172,63" />
         <EdgeLayout
           Id="Package\SEQC- detail\DFT- load equipinv room details errors.Paths[OLE DB Source Output]"
           TopLeft="231.5,105">
@@ -5245,7 +6656,9 @@ from dw.[FactDGTRuleSummary] drs
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -5267,7 +6680,9 @@ from dw.[FactDGTRuleSummary] drs
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -5289,20 +6704,14 @@ from dw.[FactDGTRuleSummary] drs
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
     </LayoutInfo>
   </TaskHost>
-  <PipelineComponentMetadata
-    design-time-name="Package\SEQC- detail\DFT- load equipinv room details errors\OLE_SRC">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
   <PipelineComponentMetadata
     design-time-name="Package\SEQC- detail\DFT- load equipinv room details errors\OLE_DST">
     <Properties>
@@ -5316,71 +6725,35 @@ from dw.[FactDGTRuleSummary] drs
       </Property>
     </Properties>
   </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\SEQC- detail\DFT- load equipinv room details errors\OLE_SRC">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
   <TaskHost
     design-time-name="Package\SEQC- summary\DFT- Error detail summary">
     <LayoutInfo>
       <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="99,42"
           Id="Package\SEQC- summary\DFT- Error detail summary\DER"
-          TopLeft="180,152" />
+          TopLeft="183,155" />
         <NodeLayout
           Size="123,42"
           Id="Package\SEQC- summary\DFT- Error detail summary\OLE_DST"
           TopLeft="169,323" />
         <NodeLayout
-          Size="99,42"
-          Id="Package\SEQC- summary\DFT- Error detail summary\DCV"
-          TopLeft="184,240" />
-        <NodeLayout
           Size="123,42"
           Id="Package\SEQC- summary\DFT- Error detail summary\OLE_SRC"
           TopLeft="172,63" />
-        <EdgeLayout
-          Id="Package\SEQC- summary\DFT- Error detail summary.Paths[OLE DB Source Output]"
-          TopLeft="231.5,105">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,47"
-              Start="0,0"
-              End="0,39.5">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,39.5" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\SEQC- summary\DFT- Error detail summary.Paths[Derived Column Output]"
-          TopLeft="231.5,194">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,46"
-              Start="0,0"
-              End="0,38.5">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,38.5" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
+        <NodeLayout
+          Size="99,42"
+          Id="Package\SEQC- summary\DFT- Error detail summary\DCV"
+          TopLeft="184,240" />
         <EdgeLayout
           Id="Package\SEQC- summary\DFT- Error detail summary.Paths[Data Conversion Output]"
           TopLeft="232,282">
@@ -5400,7 +6773,57 @@ from dw.[FactDGTRuleSummary] drs
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\SEQC- summary\DFT- Error detail summary.Paths[OLE DB Source Output]"
+          TopLeft="233,105">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,50"
+              Start="0,0"
+              End="0,42.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,42.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\SEQC- summary\DFT- Error detail summary.Paths[Derived Column Output]"
+          TopLeft="233,197">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,43"
+              Start="0,0"
+              End="0,35.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,35.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
@@ -5431,7 +6854,7 @@ from dw.[FactDGTRuleSummary] drs
     design-time-name="Package\SEQC- summary\DFT- Error summary">
     <LayoutInfo>
       <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="99,42"
           Id="Package\SEQC- summary\DFT- Error summary\DER"
@@ -5467,7 +6890,9 @@ from dw.[FactDGTRuleSummary] drs
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -5489,7 +6914,9 @@ from dw.[FactDGTRuleSummary] drs
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -5511,7 +6938,9 @@ from dw.[FactDGTRuleSummary] drs
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
@@ -5542,7 +6971,7 @@ from dw.[FactDGTRuleSummary] drs
     design-time-name="Package\SEQC- summary\DFT- PassTotal summary">
     <LayoutInfo>
       <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="123,42"
           Id="Package\SEQC- summary\DFT- PassTotal summary\OLE_DST"
@@ -5578,7 +7007,9 @@ from dw.[FactDGTRuleSummary] drs
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -5600,7 +7031,9 @@ from dw.[FactDGTRuleSummary] drs
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -5622,7 +7055,9 @@ from dw.[FactDGTRuleSummary] drs
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
@@ -5646,6 +7081,31 @@ from dw.[FactDGTRuleSummary] drs
     <Properties>
       <Property>
         <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="139,42"
+          Id="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source"
+          TopLeft="108,85" />
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Test connection to MUL03 SAN Location for future use\Data Flow Task\Excel Source">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
       </Property>
     </Properties>
   </PipelineComponentMetadata>
